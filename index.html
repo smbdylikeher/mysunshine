@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eren's Memory Book 💛</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #4A2C1A 50%, #3D2417 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+            perspective: 1500px;
+        }
+
+        /* Ambient Light */
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 200, 100, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Fairy Lights */
+        .fairy-lights {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .light {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #FFD700;
+            box-shadow: 0 0 20px #FFD700, 0 0 40px #FFA500;
+            animation: twinkle 2.5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Book Container */
+        .book-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            z-index: 10;
+            transform-style: preserve-3d;
+            animation: book-appear 1.5s ease-out;
+        }
+
+        @keyframes book-appear {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px) rotateX(-15deg);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) rotateX(0deg);
+            }
+        }
+
+        /* Open Book */
+        .book {
+            position: relative;
+            display: flex;
+            gap: 30px;
+            background: linear-gradient(to right, #FFF8E7 0%, #FFFAF0 50%, #FFF8E7 100%);
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 30px 80px rgba(0, 0, 0, 0.5),
+                inset 0 0 50px rgba(255, 215, 0, 0.1);
+            transform: rotateX(5deg);
+        }
+
+        /* Book Spine Shadow */
+        .book::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100%;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.1) 0%, 
+                rgba(0,0,0,0.05) 50%, 
+                rgba(0,0,0,0.1) 100%);
+            border-radius: 10px;
+        }
+
+        /* Paper Texture */
+        .book::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.03) 2px, rgba(255,255,255,.03) 4px);
+            pointer-events: none;
+            border-radius: 20px;
+        }
+
+        /* Pages */
+        .page {
+            flex: 1;
+            position: relative;
+            padding: 30px;
+            animation: page-turn 1s ease-out;
+        }
+
+        @keyframes page-turn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .page-left {
+            animation-delay: 0.3s;
+        }
+
+        .page-right {
+            animation-delay: 0.6s;
+        }
+
+        /* Photo Grid */
+        .photo-grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .page-left .photo-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-right .photo-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Photo Frame */
+        .photo-frame {
+            position: relative;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.3);
+            transition: all 0.3s ease;
+            animation: photo-fade-in 0.8s ease-out backwards;
+        }
+
+        @keyframes photo-fade-in {
+            from { opacity: 0; transform: scale(0.9) rotate(-5deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .photo-frame:nth-child(1) { 
+            animation-delay: 0.9s; 
+            transform: rotate(-2deg);
+        }
+        .photo-frame:nth-child(2) { 
+            animation-delay: 1.1s;
+            transform: rotate(1deg);
+        }
+        .photo-frame:nth-child(3) { 
+            animation-delay: 1.3s;
+            transform: rotate(-1deg);
+        }
+        .photo-frame:nth-child(4) { 
+            animation-delay: 1.5s;
+            transform: rotate(2deg);
+        }
+        .photo-frame:nth-child(5) { 
+            animation-delay: 1.7s;
+            transform: rotate(-1deg);
+        }
+        .photo-frame:nth-child(6) { 
+            animation-delay: 1.9s;
+            transform: rotate(1deg);
+        }
+
+        .photo-frame:hover {
+            transform: scale(1.05) rotate(0deg) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 140, 0, 0.5);
+            z-index: 10;
+        }
+
+        /* Photo Inner */
+        .photo-inner {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 10px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FFE4B5, #FFDAB9);
+        }
+
+        /* Large Photo (First one) */
+        .photo-large .photo-inner {
+            aspect-ratio: 4/5;
+        }
+
+        /* 📸 Upload 7 foto Eren di sini */
+        .photo-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(1.05) contrast(1.05) saturate(1.1);
+        }
+
+        /* Glowing Edge */
+        .photo-inner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(255, 215, 0, 0.15) 100%);
+            pointer-events: none;
+        }
+
+        /* Decorations */
+        .decoration {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Washi Tape */
+        .washi-tape {
+            height: 25px;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 192, 203, 0.5),
+                rgba(255, 192, 203, 0.5) 8px,
+                rgba(255, 182, 193, 0.5) 8px,
+                rgba(255, 182, 193, 0.5) 16px
+            );
+            opacity: 0.8;
+        }
+
+        .tape-1 {
+            width: 100px;
+            top: -8px;
+            left: 20px;
+            transform: rotate(-5deg);
+        }
+
+        .tape-2 {
+            width: 80px;
+            bottom: -8px;
+            right: 15px;
+            transform: rotate(3deg);
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 228, 181, 0.5),
+                rgba(255, 228, 181, 0.5) 8px,
+                rgba(255, 218, 185, 0.5) 8px,
+                rgba(255, 218, 185, 0.5) 16px
+            );
+        }
+
+        /* Flowers & Ribbons */
+        .flower {
+            font-size: 30px;
+            opacity: 0.7;
+            animation: gentle-sway 3s ease-in-out infinite;
+        }
+
+        @keyframes gentle-sway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .flower-1 { top: -15px; right: -10px; }
+        .flower-2 { bottom: -18px; left: -8px; font-size: 28px; animation-delay: 0.5s; }
+
+        .ribbon {
+            width: 60px;
+            height: 10px;
+            background: linear-gradient(90deg, #FFB6C1, #FFC0CB);
+            opacity: 0.7;
+            border-radius: 5px;
+        }
+
+        .ribbon-1 { top: 10px; left: -20px; transform: rotate(-25deg); }
+        .ribbon-2 { bottom: 15px; right: -18px; transform: rotate(20deg); }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            font-size: 16px;
+            opacity: 0;
+            animation: sparkle-anim 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle-anim {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 0.8; transform: scale(1) rotate(180deg); }
+        }
+
+        .sparkle-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .sparkle-2 { top: 30%; right: 15%; animation-delay: 0.7s; }
+        .sparkle-3 { bottom: 20%; left: 20%; animation-delay: 1.4s; }
+        .sparkle-4 { bottom: 40%; right: 10%; animation-delay: 2.1s; }
+
+        /* Page Navigation Hint */
+        .page-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            color: #8B4513;
+            opacity: 0.5;
+            animation: hint-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes hint-bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .book {
+                flex-direction: column;
+                gap: 40px;
+                padding: 40px 30px;
+            }
+
+            .page-right .photo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .book {
+                padding: 30px 20px;
+                transform: rotateX(0deg);
+            }
+
+            .photo-grid {
+                gap: 20px;
+            }
+
+            .decoration {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient Glow -->
+    <div class="ambient-glow"></div>
+
+    <!-- Fairy Lights -->
+    <div class="fairy-lights" id="fairyLights"></div>
+
+    <!-- Book Container -->
+    <div class="book-container">
+        <div class="book">
+            <!-- Sparkles -->
+            <div class="sparkle sparkle-1">✨</div>
+            <div class="sparkle sparkle-2">💫</div>
+            <div class="sparkle sparkle-3">⭐</div>
+            <div class="sparkle sparkle-4">✨</div>
+
+            <!-- Left Page -->
+            <div class="page page-left">
+                <div class="photo-grid">
+                    <!-- Photo 1 (Large) -->
+                    <div class="photo-frame photo-large">
+                        <div class="washi-tape tape-1 decoration"></div>
+                        <div class="flower flower-1 decoration">🌸</div>
+                        <div class="ribbon ribbon-1 decoration"></div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 1 - Upload foto Eren pertama -->
+                            <img src="eren 1.jpg" alt="Memory 1" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Photo 2 -->
+                    <div class="photo-frame">
+                        <div class="washi-tape tape-2 decoration"></div>
+                        <div class="flower flower-2 decoration">🌿</div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 2 -->
+                            <img src="eren 2.jpg" alt="Memory 2" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Photo 3 -->
+                    <div class="photo-frame">
+                        <div class="washi-tape tape-1 decoration"></div>
+                        <div class="ribbon ribbon-2 decoration"></div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 3 -->
+                            <img src="eren 3.jpg" alt="Memory 3" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Page -->
+            <div class="page page-right">
+                <div class="photo-grid">
+                    <!-- Photo 4 -->
+                    <div class="photo-frame">
+                        <div class="washi-tape tape-1 decoration"></div>
+                        <div class="flower flower-1 decoration">🌺</div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 4 -->
+                            <img src="eren 4.jpg" alt="Memory 4" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Photo 5 -->
+                    <div class="photo-frame">
+                        <div class="washi-tape tape-2 decoration"></div>
+                        <div class="ribbon ribbon-1 decoration"></div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 5 -->
+                            <img src="eren 5.jpg" alt="Memory 5" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Photo 6 -->
+                    <div class="photo-frame">
+                        <div class="flower flower-2 decoration">🍃</div>
+                        <div class="ribbon ribbon-2 decoration"></div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 6 -->
+                            <img src="eren 6.jpg" alt="Memory 6" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+
+                    <!-- Photo 7 -->
+                    <div class="photo-frame">
+                        <div class="washi-tape tape-1 decoration"></div>
+                        <div class="flower flower-1 decoration">💐</div>
+                        <div class="photo-inner">
+                            <!-- 📸 FOTO 7 -->
+                            <img src="eren 7.jpg" alt="Memory 7" onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Hint -->
+            <div class="page-hint">~ filled with love ~</div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Fairy Lights
+        const fairyLights = document.getElementById('fairyLights');
+        const lightCount = 30;
+
+        for (let i = 0; i < lightCount; i++) {
+            const light = document.createElement('div');
+            light.className = 'light';
+            
+            // Random positioning
+            const randomTop = Math.random() * 100;
+            const randomLeft = Math.random() * 100;
+            
+            light.style.top = randomTop + '%';
+            light.style.left = randomLeft + '%';
+            light.style.animationDelay = (Math.random() * 2) + 's';
+            
+            fairyLights.appendChild(light);
+        }
+
+        // Add hover effect to photos
+        const photos = document.querySelectorAll('.photo-frame');
+        photos.forEach(photo => {
+            photo.addEventListener('mouseenter', function() {
+                this.style.zIndex = '20';
+            });
+            
+            photo.addEventListener('mouseleave', function() {
+                setTimeout(() => {
+                    this.style.zIndex = '1';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
